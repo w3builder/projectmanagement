@@ -1,7 +1,8 @@
 # projectmanagement
 
 Correção realizada no sript abaixo pois o antigo apresentava <br />
-erro na definição da chave composta
+erro na definição da chave composta<br />
+Também foi incluido mais dois campos (nome, cargo) como indicado.
 
 CREATE TABLE public.membros (<br />
 	idprojeto int8 NOT NULL,<br />
