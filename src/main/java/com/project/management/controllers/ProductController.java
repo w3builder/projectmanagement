@@ -2,7 +2,6 @@ package com.project.management.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,86 +11,52 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.project.management.helpers.Helper;
+import com.project.management.domain.dto.PersonDTO;
 import com.project.management.domain.dto.ProjectDTO;
-import com.project.management.domain.enums.RiskLevel;
-import com.project.management.domain.enums.Status;
+import com.project.management.helpers.Helper;
 import com.project.management.services.PersonService;
 import com.project.management.services.ProjectService;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/projects")
 public class ProductController {
 	
-	@Autowired
-	private ProjectService service;
+	private final ProjectService service;
 	
-	@Autowired
-	private PersonService personService;
+	private final PersonService personService;
 	
 	@GetMapping("/search")
-	public String findByName(Model model, @RequestParam("name") String name) {
-		List<ProjectDTO> projectList = service.findByNameLike(name);
-		model.addAttribute("projects", projectList);
-		model.addAttribute("displayAlert", "none");
-		
-		if(projectList.isEmpty()) {
-			model.addAttribute("displayAlert", "block");
-			model.addAttribute("message", Helper.EMPTY_SEARCH);
-			return "index";
-		}
-		
-		return "index";
+	public String search(Model model, @RequestParam("name") String name) {
+		List<ProjectDTO> listProjects = service.findByNameLike(name);
+		return Helper.prepareIndexView(model, listProjects);
 	}
 	
 	@GetMapping("/new")
 	public String create(Model model) {
-		
-		model.addAttribute("risk", RiskLevel.values());
-		model.addAttribute("status", Status.values());
-		model.addAttribute("personList", personService.findByManager(Boolean.TRUE));
-		
-		return "create";
+		List<PersonDTO> listManagers = personService.findByManager(Boolean.TRUE);
+		return Helper.prepareCreateView(model, listManagers);
+	}
+	
+	
+	@GetMapping("/edit/{id}")
+	public String edite(Model model, @PathVariable("id") Long id) {
+		ProjectDTO project = service.findById(id);
+		List<PersonDTO> listPersons = personService.findByManager(Boolean.TRUE);
+		return Helper.prepareEditView(model, listPersons, project);
 	}
 	
 	@PostMapping("/save")
 	public String save(@ModelAttribute ProjectDTO project) {
 		service.save(project);
-		return "redirect:/";
-	}
-	
-	@GetMapping("/edit/{id}")
-	public String edite(Model model, @PathVariable("id") Long id) {
-		
-		model.addAttribute("project", service.findById(id));
-		model.addAttribute("risk", RiskLevel.values());
-		model.addAttribute("status", Status.values());
-		model.addAttribute("personList", personService.findByManager(Boolean.TRUE));
-		
-		return "edit";
-	}
-	
-	@PostMapping("/update")
-	public String update(@ModelAttribute ProjectDTO project) {
-		service.save(project);
-		return "redirect:/";
+		return Helper.REDIRECT_URL;
 	}
 	
 	@GetMapping("/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Long id) {
-
-		ProjectDTO project = service.findById(id);
-		
-		if (project != null && Helper.isStatusNotDelete(project)) {
-			model.addAttribute("displayAlert", "block");
-			model.addAttribute("message", String.format(Helper.NOT_DELETE_WITH_STATUS,
-					project.getStatus().getDescription()));
-		} else {
-			model.addAttribute("displayAlert", "none");
-			service.deleteById(id);
-		}
-
-		model.addAttribute("projects", service.findAll());
-		return "index";
+		service.deleteById(id);
+		return Helper.REDIRECT_URL;
 	}
 }

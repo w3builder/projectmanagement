@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberDTO {
     private MemberIdDTO id;
-    private ProjectDTO projeto;
-    private PersonDTO pessoa;
     private String name;
     private Position position;
 }

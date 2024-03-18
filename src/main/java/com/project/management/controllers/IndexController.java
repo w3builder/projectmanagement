@@ -1,22 +1,26 @@
 package com.project.management.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.project.management.domain.dto.ProjectDTO;
+import com.project.management.helpers.Helper;
 import com.project.management.services.ProjectService;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class IndexController {
 
-	@Autowired
-	private ProjectService service;
+	private final ProjectService service;
 	
 	@GetMapping("/")
 	public String getIndex(Model model) {
-		model.addAttribute("displayAlert", "none");
-		model.addAttribute("projects", service.findAll());
-		return "index";
+		List<ProjectDTO> listProjects = service.findAll();
+		return Helper.prepareIndexView(model, listProjects);
 	}
 }

@@ -1,49 +1,45 @@
 package com.project.management.services.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.management.domain.dto.ProjectDTO;
 import com.project.management.domain.models.Project;
 import com.project.management.domain.repositories.ProjectRepository;
+import com.project.management.mapper.ProjectMapper;
 import com.project.management.services.ProjectService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 	
-	@Autowired
-	private ProjectRepository repository;
-	
-	@Autowired
-	private ModelMapper mapper;
+	private final ProjectRepository repository;	
+	private final ProjectMapper mapper;
 
 	@Override
 	public List<ProjectDTO> findAll() {
-		return repository.findAll().stream()
-				.map(project -> mapper.map(project, ProjectDTO.class))
-		        .collect(Collectors.toList());
+		return mapper.toListDTO(repository.findAll());
 	}
 
 	@Override
 	public List<ProjectDTO> findByNameLike(String name) {
-		return repository.findByNameLike(String.format("%%%s%%", name)).stream()
-				.map(project -> mapper.map(project, ProjectDTO.class))
-		        .collect(Collectors.toList());
+		String like = String.format("%%%s%%", name);
+		return mapper.toListDTO(repository.findByNameLike(like));
 	}
 
 	@Override
 	public ProjectDTO findById(Long id) {
 		Project project = repository.findById(id).orElse(null);
-		return mapper.map(project, ProjectDTO.class);
+		return mapper.toDTO(project);
 	}
 
 	@Override
 	public ProjectDTO save(ProjectDTO project) {
-		return mapper.map(repository.save(mapper.map(project, Project.class)), ProjectDTO.class);
+		Project projectSave = repository.save(mapper.toEntity(project));
+		return mapper.toDTO(projectSave);
 	}
 
 	@Override

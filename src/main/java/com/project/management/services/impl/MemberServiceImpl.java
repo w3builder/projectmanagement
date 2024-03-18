@@ -1,48 +1,86 @@
 package com.project.management.services.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.management.domain.dto.MemberDTO;
 import com.project.management.domain.dto.MemberIdDTO;
-import com.project.management.domain.models.Member;
 import com.project.management.domain.models.MemberId;
 import com.project.management.domain.repositories.MemberRepository;
+import com.project.management.exceptions.BusinessException;
+import com.project.management.exceptions.ConflictException;
+import com.project.management.exceptions.UnprocessableEntityException;
+import com.project.management.helpers.Helper;
+import com.project.management.mapper.MemberIdMapper;
+import com.project.management.mapper.MemberMapper;
 import com.project.management.services.MemberService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-	@Autowired
-	private MemberRepository repository;
-	
-	@Autowired
-	private ModelMapper mapper;
+	private final MemberRepository repository;
+	private final MemberMapper mapper;
+	private final MemberIdMapper mapperId; 
 	
 	@Override
 	public List<MemberDTO> findAll() {
-		return repository.findAll().stream()
-				.map(member -> mapper.map(member, MemberDTO.class))
-		        .collect(Collectors.toList());
-	}
-
-	@Override
-	public MemberDTO save(MemberDTO member) {
-		return mapper.map(repository.save(mapper.map(member, Member.class)), MemberDTO.class);
+		try {
+			List<MemberDTO> listMembers = mapper.toListDTO(repository.findAll());
+			if(listMembers.isEmpty()) {
+				throw new UnprocessableEntityException(Helper.LIST_ALL_NOT_FOUND);
+			}
+			return listMembers;
+			
+		} catch (UnprocessableEntityException e) {
+			throw new UnprocessableEntityException(e.getMessage());
+		} catch (Exception e) {
+			throw new BusinessException("Erro ao listar todos os membros", e);
+		}
 	}
 
 	@Override
 	public MemberDTO findById(MemberIdDTO memberId) {
-		MemberId mId = mapper.map(memberId, MemberId.class);
-		return mapper.map(repository.findById(mId), MemberDTO.class);
+		try {
+			MemberId id = mapperId.toEmbeded(memberId);
+			MemberDTO member = mapper.toDTO(repository.findById(id).orElse(null));
+			if(Objects.isNull(member)) {
+				throw new UnprocessableEntityException(Helper.NOT_FOUND);
+			}
+			return member;
+			
+		} catch (UnprocessableEntityException e) {
+			throw new UnprocessableEntityException(e.getMessage());
+		} catch (Exception e) {
+			throw new BusinessException("Erro ao buscar membro", e);
+		}
+	}
+
+	@Override
+	public MemberDTO save(MemberDTO member) {
+		try {
+			if(repository.findById(mapperId.toEmbeded(member.getId())).isPresent()) {
+				throw new ConflictException("Membro já cadastro ao projeto");
+			}
+			return mapper.toDTO(repository.save(mapper.toEntity(member)));
+			
+		} catch (ConflictException e) {
+			throw new ConflictException(e.getMessage());
+		} catch (Exception e) {
+			throw new BusinessException("Erro ao salvar membro", e);
+		}
 	}
 
 	@Override
 	public void deleteById(MemberIdDTO memberId) {
-		repository.deleteById(mapper.map(memberId, MemberId.class));
+		try {
+			repository.deleteById(mapperId.toEmbeded(memberId));
+		} catch (Exception e) {
+			throw new BusinessException("Erro ao tenter deletar o membro", e);
+		}
 	}
 }

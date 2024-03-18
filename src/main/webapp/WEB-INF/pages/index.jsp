@@ -4,7 +4,7 @@
 	contentType="text/html" 
 	pageEncoding="UTF-8"
 	import="com.project.management.domain.enums.Status"
-	import="com.project.management.domain.enums.RiskLevel"
+	import="com.project.management.domain.enums.Risk"
 %>
 
 <!DOCTYPE html>
@@ -18,6 +18,7 @@
 		<link href="/static/libs/bootstrap/css/bootstrap.5.3.0.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="/static/libs/bootstrap/css/bootstrap-datepicker.1.9.0.min.css">
 		<link href="/static/css/main.css" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	</head>
 	<body>
 		<%@ include file="header.jsp" %>
@@ -31,7 +32,8 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title mb-3">PROJETOS</h4>
-			        <table class="table table-striped custom-table">
+			        <table class="table custom-table" >
+			        	<caption></caption>
 			            <thead>
 			                <tr>
 			                    <th scope="col">Nome</th>
@@ -53,10 +55,10 @@
 			                        <td class="text-end"><fmt:formatNumber value="${project.budget}" type="currency" currencyCode="BRL" /></td>
 			                        <td>${project.status.description}</td>
 			                        <td>
-			                            <a href="/projects/edit/${project.id}">Editar</a> |
+			                            <a href="/projects/edit/${project.id}"><i class="bi bi-pencil me-3"></i></a>
 			                            <a class="deletar" href="/projects/delete/${project.id}" 
 			                            	data-bs-toggle="modal" 
-			                            	data-bs-target="#confirmModal">Deletar</a>
+			                            	data-bs-target="#confirmModal"><i class="bi bi-trash"></i></a>
 			                        </td>
 			                    </tr>
 			                </c:forEach>
@@ -76,9 +78,7 @@
 					<div class="modal-body">Tem certeza de que deseja prosseguir?</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-						<form id="deleteForm">
-							<button type="submit" class="btn btn-primary">Confirmar</button>
-						</form>
+						<button type="button" class="btn btn-primary" id="confirmDeleteButton">Confirmar</button>
 					</div>
 				</div>
 			</div>
@@ -94,8 +94,12 @@
 	<script src="/static/js/main.js"></script>
 	
 	<script>
-		$(".deletar").click(function(event){
-			$("#deleteForm").attr("action", event.target);
+		$(".deletar").click(function(){
+			$("#confirmDeleteButton").attr("value", this.href);
 		});
+		
+		$("#confirmDeleteButton").click(function(){
+			window.location.href = $(this).attr("value");
+		});		
 	</script>
 </html>

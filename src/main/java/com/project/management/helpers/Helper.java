@@ -1,27 +1,67 @@
 package com.project.management.helpers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.ui.Model;
+
+import com.project.management.domain.dto.PersonDTO;
 import com.project.management.domain.dto.ProjectDTO;
+import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
 
 public class Helper {
 	
-	public static final String EMPTY_SEARCH = "A consulta não retornou nenhum resultado!";
+	private Helper() {}
+	
+	public static final String LIST_ALL_NOT_FOUND = "Não há registros cadastrados!";
+	public static final String NOT_FOUND = "A busca por id não retornou resultado!";
+	public static final String EMPTY_SEARCH = "A consulta não retornou resultados";
 	public static final String NOT_DELETE_WITH_STATUS = "Não é permitido excluir um projeto com o status: %s";
+	public static final String REDIRECT_URL = "redirect:/";
+	
+	public static String prepareIndexView(Model model, List<ProjectDTO> listProjects) {
+		
+		model.addAttribute("projects", listProjects);
+		model.addAttribute("displayAlert", "none");
+		
+		if(listProjects.isEmpty()) {
+			model.addAttribute("displayAlert", "block");
+			model.addAttribute("message", EMPTY_SEARCH);
+		}
+		
+		return "index";
+	}
+	
+	public static String prepareCreateView(Model model, List<PersonDTO> listManager) {
+		model.addAttribute("risk", Risk.values());
+		model.addAttribute("status", Status.values());
+		model.addAttribute("personList", listManager);
+		return "create";
+	}
+	
+	public static String prepareEditView(Model model, List<PersonDTO> listManager, ProjectDTO project) {
+		model.addAttribute("project", project);
+		model.addAttribute("risk", Risk.values());
+		model.addAttribute("status", Status.values());
+		model.addAttribute("personList", listManager);
+		return "edit";
+	}
 
 	public static boolean isStatusNotDelete(ProjectDTO project) {
-		if(project.getStatus().equals(Status.STARTED) || project.getStatus().equals(Status.IN_PROGRESS)
-				|| project.getStatus().equals(Status.CLOSED)) {
-			return true;
-		} 
-		return false;
+		return project.getStatus().equals(Status.STARTED) || project.getStatus().equals(Status.IN_PROGRESS)
+				|| project.getStatus().equals(Status.CLOSED);
 	}
 	
 	public static boolean isInvalideDeadline(ProjectDTO project) {
-		if(project.getStartDate().after(project.getExpectedEndDate()) 
-				|| project.getStartDate().after(project.getEndDate())){
-				
-			return true;
-		}
-		return false;
+		return project.getStartDate().after(project.getExpectedEndDate()) 
+				|| project.getStartDate().after(project.getEndDate());
 	}
+	
+	public static Date stringToDate(String dataString) throws ParseException {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        return formato.parse(dataString);
+    }
 }

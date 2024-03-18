@@ -1,6 +1,6 @@
 package com.project.management.domain.enums;
 
-public enum RiskLevel {
+public enum Risk {
 	
 	LOW_RISK(0, "Baixo Risco"), 
 	MEDIUM_RISK(1, "Médio Risco"), 
@@ -9,7 +9,7 @@ public enum RiskLevel {
 	private final Integer ordinal;
 	private final String description;
 
-	RiskLevel(Integer ordinal, String description) {
+	Risk(Integer ordinal, String description) {
 		this.ordinal = ordinal;
 		this.description = description;
 	}

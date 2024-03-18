@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.project.management.domain.enums.RiskLevel;
+import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -57,7 +57,7 @@ public class Project {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "RISCO", length = 45)
-    private RiskLevel risk;
+    private Risk risk;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IDGERENTE", referencedColumnName = "id", nullable = false)

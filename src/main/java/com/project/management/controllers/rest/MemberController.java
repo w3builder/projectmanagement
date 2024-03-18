@@ -2,7 +2,6 @@ package com.project.management.controllers.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,20 +16,22 @@ import com.project.management.domain.dto.MemberDTO;
 import com.project.management.domain.dto.MemberIdDTO;
 import com.project.management.services.MemberService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
 
-	@Autowired
-	private MemberService service;
+	private final MemberService service;
 	
 	@GetMapping
-	private ResponseEntity<List<MemberDTO>> findAll(){
+	public ResponseEntity<List<MemberDTO>> findAll(){
 		return ResponseEntity.ok(service.findAll());
 	}
 	
 	@GetMapping("/{idProject}/{idPerson}")
-	private ResponseEntity<MemberDTO> findById(@PathVariable("idProject") Long idProject, 
+	public ResponseEntity<MemberDTO> findById(@PathVariable("idProject") Long idProject, 
 			@PathVariable("idPerson") Long idPerson) {
 		
 		MemberIdDTO memberId = new MemberIdDTO(idProject, idPerson);
@@ -40,17 +41,17 @@ public class MemberController {
 	}
 	
 	@PostMapping
-	private void save(@RequestBody MemberDTO member) {
+	public void save(@RequestBody MemberDTO member) {
 		service.save(member);
 	}
 	
 	@PutMapping
-	private void update(@RequestBody MemberDTO member) {
+	public void update(@RequestBody MemberDTO member) {
 		service.save(member);
 	}
 	
 	@DeleteMapping("/delete/{idProject}/{idPerson}")
-	private void delete(@PathVariable("idProject") Long idProject, 
+	public void delete(@PathVariable("idProject") Long idProject, 
 			@PathVariable("idPerson") Long idPerson) {
 		service.deleteById(new MemberIdDTO(idProject, idPerson));
 	}

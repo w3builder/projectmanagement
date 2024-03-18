@@ -20,7 +20,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4 class="card-title mb-3">EDITAR PROJETO</h4>
-					<form action="/projects/update" modelAttribute="project" method="post">
+					<form action="/projects/save" modelAttribute="project" method="post">
 						<input type="hidden" name="id" id="projectId" value="${project.id}" />
 						<div class="row mb-3">
 							<div class="col-sm-8">
