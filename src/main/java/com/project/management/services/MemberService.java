@@ -9,6 +9,7 @@ public interface MemberService {
 
 	List<MemberDTO> findAll();
 	MemberDTO save(MemberDTO member);
+	MemberDTO update(MemberDTO member);
 	MemberDTO findById(MemberIdDTO id);
 	void deleteById(MemberIdDTO id);
 }

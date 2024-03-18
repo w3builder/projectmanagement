@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.management.domain.dto.MemberDTO;
 import com.project.management.domain.dto.MemberIdDTO;
+import com.project.management.domain.models.Member;
 import com.project.management.domain.models.MemberId;
 import com.project.management.domain.repositories.MemberRepository;
 import com.project.management.exceptions.BusinessException;
@@ -56,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
 		} catch (UnprocessableEntityException e) {
 			throw new UnprocessableEntityException(e.getMessage());
 		} catch (Exception e) {
-			throw new BusinessException("Erro ao buscar membro", e);
+			throw new BusinessException("Erro ao buscar membro por id", e);
 		}
 	}
 
@@ -74,11 +75,34 @@ public class MemberServiceImpl implements MemberService {
 			throw new BusinessException("Erro ao salvar membro", e);
 		}
 	}
+	
+	@Override
+	public MemberDTO update(MemberDTO member) {
+		try {
+			MemberId memberId = mapperId.toEmbeded(member.getId());
+			Member memberUpdate = repository.findById(memberId)
+					.orElseThrow(() -> new UnprocessableEntityException(Helper.NOT_FOUND));
+			
+			return mapper.toDTO(repository.save(memberUpdate));
+			
+		} catch (UnprocessableEntityException e) {
+			throw new UnprocessableEntityException(e.getMessage());
+		} catch (Exception e) {
+			throw new BusinessException("Erro ao tentar atualizar o membro", e);
+		}
+	}
 
 	@Override
 	public void deleteById(MemberIdDTO memberId) {
 		try {
-			repository.deleteById(mapperId.toEmbeded(memberId));
+			MemberId id = mapperId.toEmbeded(memberId);			
+			Member member = repository.findById(id)
+					.orElseThrow(() -> new UnprocessableEntityException(Helper.NOT_FOUND));
+			
+			repository.deleteById(member.getId());
+			
+		} catch (UnprocessableEntityException e) {
+			throw new UnprocessableEntityException(e.getMessage());
 		} catch (Exception e) {
 			throw new BusinessException("Erro ao tenter deletar o membro", e);
 		}

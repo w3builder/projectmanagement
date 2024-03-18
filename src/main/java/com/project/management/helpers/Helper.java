@@ -11,6 +11,7 @@ import com.project.management.domain.dto.PersonDTO;
 import com.project.management.domain.dto.ProjectDTO;
 import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
+import com.project.management.domain.models.Project;
 
 public class Helper {
 	
@@ -50,7 +51,7 @@ public class Helper {
 		return "edit";
 	}
 
-	public static boolean isStatusNotDelete(ProjectDTO project) {
+	public static boolean isStatusNotDelete(Project project) {
 		return project.getStatus().equals(Status.STARTED) || project.getStatus().equals(Status.IN_PROGRESS)
 				|| project.getStatus().equals(Status.CLOSED);
 	}

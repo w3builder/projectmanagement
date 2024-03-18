@@ -1,5 +1,12 @@
 # projectmanagement
 
+### Requisitos
+
+1. JDK 11
+1. Maven 3
+
+Durante a prova prática foi incluido o Swegger2 que pode ser acessando via url: http://localhost:8080/swagger-ui/
+
 * Correção realizada no sript abaixo pois o antigo apresentava erro na definição da chave composta Também foi incluido mais dois campos (nome, cargo) como indicado.
 
 `-- -----------------------------------------------------`<br/>

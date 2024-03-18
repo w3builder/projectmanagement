@@ -9,10 +9,12 @@ import javax.persistence.Table;
 
 import com.project.management.domain.enums.Position;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "MEMBROS")
 public class Member {
 
