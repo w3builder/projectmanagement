@@ -15,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.project.management.domain.dto.PersonDTO;
-import com.project.management.domain.models.Person;
-import com.project.management.mapper.PersonMapper;
 import com.project.management.services.PersonService;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,13 +23,10 @@ class PersonServiceTest {
 	@Mock
 	PersonService service;
 
-	@Mock
-	PersonMapper mapper;
-	
 	@Test
 	void deveBuscarTodosOsGerentes() {
 		
-		PersonDTO manager = mapper.toDTO( new Person(1L, "João", new Date(), "123.456.789-10", true, true));
+		PersonDTO manager = new PersonDTO(1L, "João", new Date(), "123.456.789-10", true, true);
 		
 		List<PersonDTO> listManager = Arrays.asList(manager);
 		

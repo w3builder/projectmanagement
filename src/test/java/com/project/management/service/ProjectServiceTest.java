@@ -9,16 +9,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.project.management.domain.dto.PersonDTO;
 import com.project.management.domain.dto.ProjectDTO;
 import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
-import com.project.management.domain.models.Person;
-import com.project.management.domain.models.Project;
 import com.project.management.domain.repositories.ProjectRepository;
 import com.project.management.mapper.ProjectMapper;
 import com.project.management.services.ProjectService;
@@ -35,12 +35,21 @@ class ProjectServiceTest {
 	@Mock
 	ProjectMapper mapper;
 	
+	PersonDTO manager;
+	ProjectDTO project;
+	List<ProjectDTO> listProjects;
+	
+	@BeforeEach
+	void setup() {
+		manager = new PersonDTO(1L, "João", new Date(), "123.456.789-10", true, true);
+		project = new ProjectDTO(1L, "Projeto A", new Date(), new Date(), null,
+				"Um novo projeto A", Status.STARTED, 10000.0f, Risk.LOW_RISK, manager);
+		
+		listProjects = Arrays.asList(project);
+	}
+	
 	@Test
     void deveCriarAtualizarProjetoComSucesso() {
-		
-		Person manager = new Person(1L, "João", new Date(), "123.456.789-10", true, true);
-		ProjectDTO project = mapper.toDTO(new Project(1L, "Projeto A", new Date(), new Date(), null,
-				"Um novo projeto A", Status.STARTED, 10000.0f, Risk.LOW_RISK, manager));
 		
 		when(service.save(project)).thenReturn(project);
 		
@@ -54,12 +63,8 @@ class ProjectServiceTest {
 	@Test
 	void deveBuscarProjetoPorIdComSucesso() {
 		
-		Person manager = new Person(1L, "João", new Date(), "123.456.789-10", true, true);
-		ProjectDTO project = mapper.toDTO(new Project(1L, "Projeto A", new Date(), new Date(), null,
-				"Um novo projeto A", Status.STARTED, 10000.0f, Risk.LOW_RISK, manager));
-		
-		when(service.findById(1L)).thenReturn(project);
-		ProjectDTO projectSave = service.findById(1L);		
+		when(service.findById(project.getId())).thenReturn(project);
+		ProjectDTO projectSave = service.findById(project.getId());		
 		
 		assertEquals(project, projectSave);
 		verify(service).findById(1L);
@@ -68,11 +73,6 @@ class ProjectServiceTest {
 	
 	@Test
 	void deveBuscarProjetosPorNome() {
-		Person manager = new Person(1L, "João", new Date(), "123.456.789-10", true, true);
-		ProjectDTO project = mapper.toDTO(new Project(1L, "Projeto A", new Date(), new Date(), null,
-				"Um novo projeto A", Status.STARTED, 10000.0f, Risk.LOW_RISK, manager));
-		
-		List<ProjectDTO> listProjects = Arrays.asList(project);
 		
 		when(service.findByNameLike("Projeto")).thenReturn(listProjects);
 		List<ProjectDTO> listProjectsReturn = service.findByNameLike("Projeto");		
@@ -84,11 +84,6 @@ class ProjectServiceTest {
 	
 	@Test
 	void deveBuscarTodosOsProjetos() {
-		Person manager = new Person(1L, "João", new Date(), "123.456.789-10", true, true);
-		ProjectDTO project = mapper.toDTO(new Project(1L, "Projeto A", new Date(), new Date(), null,
-				"Um novo projeto A", Status.STARTED, 10000.0f, Risk.LOW_RISK, manager));
-		
-		List<ProjectDTO> listProjects = Arrays.asList(project);
 		
 		when(service.findAll()).thenReturn(listProjects);
 		List<ProjectDTO> listProjectsReturn = service.findAll();		
