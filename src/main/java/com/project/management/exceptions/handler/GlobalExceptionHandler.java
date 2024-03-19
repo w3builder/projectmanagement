@@ -14,7 +14,7 @@ import com.project.management.exceptions.BusinessException;
 import com.project.management.exceptions.ConflictException;
 import com.project.management.exceptions.UnprocessableEntityException;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.project.management.controllers.rest")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
