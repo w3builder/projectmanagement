@@ -56,7 +56,15 @@ public class ProductController {
 	
 	@GetMapping("/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Long id) {
-		service.deleteById(id);
-		return Helper.REDIRECT_URL;
+		
+		ProjectDTO project = service.findById(id);
+
+		try {
+			service.deleteById(project.getId());
+			return Helper.REDIRECT_URL;
+
+		}catch (Exception e) {
+			return Helper.prepareDeleteErrorView(model, service.findAll(), project, e.getMessage());			
+		}
 	}
 }

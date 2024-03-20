@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.format;
+
 import org.springframework.ui.Model;
 
 import com.project.management.domain.dto.PersonDTO;
@@ -21,15 +23,16 @@ public class Helper {
 	public static final String NOT_FOUND = "A busca por id não retornou resultado!";
 	public static final String EMPTY_SEARCH = "A consulta não retornou resultados";
 	public static final String NOT_DELETE_WITH_STATUS = "Não é permitido excluir um projeto com o status: %s";
+	public static final String DISPLAY_ALERT = "displayAlert";
 	public static final String REDIRECT_URL = "redirect:/";
 	
 	public static String prepareIndexView(Model model, List<ProjectDTO> listProjects) {
 		
 		model.addAttribute("projects", listProjects);
-		model.addAttribute("displayAlert", "none");
+		model.addAttribute(DISPLAY_ALERT, "none");
 		
 		if(listProjects.isEmpty()) {
-			model.addAttribute("displayAlert", "block");
+			model.addAttribute(DISPLAY_ALERT, "block");
 			model.addAttribute("message", EMPTY_SEARCH);
 		}
 		
@@ -49,6 +52,15 @@ public class Helper {
 		model.addAttribute("status", Status.values());
 		model.addAttribute("personList", listManager);
 		return "edit";
+	}
+	
+	public static String prepareDeleteErrorView(Model model, List<ProjectDTO> listProjects, ProjectDTO project, String message) {
+		
+		model.addAttribute("projects", listProjects);
+		model.addAttribute(DISPLAY_ALERT, "block");
+		model.addAttribute("message", format(NOT_DELETE_WITH_STATUS, project.getStatus().getDescription()));
+		
+		return "index";
 	}
 
 	public static boolean isStatusNotDelete(Project project) {
