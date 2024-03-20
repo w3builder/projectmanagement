@@ -100,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
 			repository.deleteById(project.getId());
 			
 		} catch (ConflictException e) {
-			throw new UnprocessableEntityException(e.getMessage());
+			throw new ConflictException(e.getMessage());
 		} catch (Exception e) {
 			throw new BusinessException("Erro ao tenter deletar o projeto", e);
 		}

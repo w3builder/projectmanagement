@@ -58,7 +58,7 @@ public class Helper {
 		
 		model.addAttribute("projects", listProjects);
 		model.addAttribute(DISPLAY_ALERT, "block");
-		model.addAttribute("message", format(NOT_DELETE_WITH_STATUS, project.getStatus().getDescription()));
+		model.addAttribute("message", format(message, project.getStatus().getDescription()));
 		
 		return "index";
 	}
