@@ -22,7 +22,7 @@ CREATE TABLE projeto (
 	risco varchar(45) NULL,
 	idgerente int8 NOT NULL,
 	CONSTRAINT pk_projeto PRIMARY KEY (id),
-	CONSTRAINT fk_gerente FOREIGN KEY (idgerente) REFERENCES public.pessoa(id)
+	CONSTRAINT fk_gerente FOREIGN KEY (idgerente) REFERENCES pessoa(id)
 );
 
 -- DROP TABLE membros;
@@ -32,6 +32,6 @@ CREATE TABLE membros (
 	nome varchar(200) NOT NULL,
 	cargo varchar(200) NOT NULL,
 	CONSTRAINT pk_membros PRIMARY KEY (idprojeto, idpessoa),
-	CONSTRAINT fk_membros_pessoa FOREIGN KEY (idpessoa) REFERENCES public.pessoa(id),
-	CONSTRAINT fk_membros_projeto FOREIGN KEY (idprojeto) REFERENCES public.projeto(id)
+	CONSTRAINT fk_membros_pessoa FOREIGN KEY (idpessoa) REFERENCES pessoa(id),
+	CONSTRAINT fk_membros_projeto FOREIGN KEY (idprojeto) REFERENCES projeto(id)
 );
