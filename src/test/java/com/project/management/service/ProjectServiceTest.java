@@ -1,6 +1,9 @@
 package com.project.management.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -20,6 +23,8 @@ import com.project.management.domain.dto.ProjectDTO;
 import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
 import com.project.management.domain.repositories.ProjectRepository;
+import com.project.management.exceptions.ConflictException;
+import com.project.management.helpers.Helper;
 import com.project.management.mapper.ProjectMapper;
 import com.project.management.services.ProjectService;
 
@@ -90,6 +95,30 @@ class ProjectServiceTest {
 		
 		assertEquals(listProjects, listProjectsReturn);
 		verify(service).findAll();
+		verifyNoMoreInteractions(service);
+	}
+	
+	@Test
+	void deveDeletarProjetoPorId() {
+		
+		doNothing().when(service).deleteById(project.getId());
+		
+		service.deleteById(project.getId());
+		
+		verify(service).deleteById(project.getId());
+		verifyNoMoreInteractions(service);
+	}
+	
+	@Test
+	void deveRetornarExceptionAoDeletarComStatusNaoPermitido() {
+		
+		doThrow(new ConflictException(Helper.NOT_DELETE_WITH_STATUS)).when(service).deleteById(project.getId());
+		
+		assertThrows(ConflictException.class, ()-> {
+			service.deleteById(project.getId());
+		});		
+		
+		verify(service).deleteById(project.getId());
 		verifyNoMoreInteractions(service);
 	}
 }

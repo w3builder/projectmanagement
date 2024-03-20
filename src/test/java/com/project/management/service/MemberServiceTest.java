@@ -1,6 +1,9 @@
 package com.project.management.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -17,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.project.management.domain.dto.MemberDTO;
 import com.project.management.domain.dto.MemberIdDTO;
 import com.project.management.domain.enums.Position;
+import com.project.management.exceptions.ConflictException;
 import com.project.management.services.MemberService;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +53,19 @@ class MemberServiceTest {
 	}
 	
 	@Test
+	void deveRetornarExceptionQuandoOMembroExiste() {
+		
+		doThrow(new ConflictException("Membro já cadastro ao projeto")).when(service).deleteById(member.getId());
+		
+		assertThrows(ConflictException.class, ()-> {
+			service.findById(member.getId());
+		});		
+		
+		verify(service).deleteById(member.getId());
+		verifyNoMoreInteractions(service);
+	}
+	
+	@Test
 	void deveBuscarMembroPorIdComSucesso() {
 		
 		when(service.findById(id)).thenReturn(member);
@@ -70,4 +87,16 @@ class MemberServiceTest {
 		verify(service).findAll();
 		verifyNoMoreInteractions(service);
 	}
+	
+	@Test
+	void deveDeletarMembroPorId() {
+		
+		doNothing().when(service).deleteById(member.getId());
+		
+		service.deleteById(member.getId());
+		
+		verify(service).deleteById(member.getId());
+		verifyNoMoreInteractions(service);
+	}
+	
 }
