@@ -55,13 +55,13 @@ class MemberServiceTest {
 	@Test
 	void deveRetornarExceptionQuandoOMembroExiste() {
 		
-		doThrow(new ConflictException("Membro já cadastro ao projeto")).when(service).deleteById(member.getId());
+		doThrow(new ConflictException("Membro já cadastro ao projeto")).when(service).save(member);
 		
 		assertThrows(ConflictException.class, ()-> {
-			service.findById(member.getId());
+			service.save(member);
 		});		
 		
-		verify(service).deleteById(member.getId());
+		verify(service).save(member);
 		verifyNoMoreInteractions(service);
 	}
 	

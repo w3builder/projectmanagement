@@ -22,10 +22,8 @@ import com.project.management.domain.dto.PersonDTO;
 import com.project.management.domain.dto.ProjectDTO;
 import com.project.management.domain.enums.Risk;
 import com.project.management.domain.enums.Status;
-import com.project.management.domain.repositories.ProjectRepository;
 import com.project.management.exceptions.ConflictException;
 import com.project.management.helpers.Helper;
-import com.project.management.mapper.ProjectMapper;
 import com.project.management.services.ProjectService;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,12 +32,6 @@ class ProjectServiceTest {
 	@Mock
 	ProjectService service;
 
-	@Mock
-	ProjectRepository repository;
-
-	@Mock
-	ProjectMapper mapper;
-	
 	PersonDTO manager;
 	ProjectDTO project;
 	List<ProjectDTO> listProjects;
