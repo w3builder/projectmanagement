@@ -44,7 +44,7 @@ CREATE TABLE membros (
 ```mermaid
 
 erDiagram
-    PERSON {
+    PESSOA {
         id bigserial PK
         nome varchar(100)
         datanascimento date
@@ -53,7 +53,7 @@ erDiagram
         gerente bool
     }
     
-    PROJECT {
+    PROJETO {
         id bigserial PK
         nome varchar(200)
         data_inicio date
@@ -66,7 +66,7 @@ erDiagram
         idgerente int8 FK
     }
     
-    MEMBER {
+    MEMBRO {
         idprojeto int8 PK
         idpessoa int8 PK
         nome varchar(200)
