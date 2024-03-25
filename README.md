@@ -7,7 +7,7 @@
 
 Durante a prova prática foi incluido o Swegger2 que pode ser acessando via url: http://localhost:8080/swagger-ui/
 
-* Correção realizada no sript abaixo pois o antigo apresentava erro na definição da chave composta Também foi incluido mais dois campos (nome, cargo) como indicado.
+* Correção realizada no script abaixo pois o antigo apresentava erro na definição da chave composta Também foi incluido mais dois campos (nome, cargo) como indicado.
 
 `-- -----------------------------------------------------`<br/>
 `-- Table Membros CORRIGIDA`<br/>
@@ -38,4 +38,43 @@ Durante a prova prática foi incluido o Swegger2 que pode ser acessando via url:
 `REFERENCES pessoa (id) MATCH SIMPLE`<br/>
 `ON UPDATE NO ACTION ON DELETE NO ACTION);`<br/>
 
+
+## Diagrama
+
+```mermaid
+
+erDiagram
+    PERSON {
+        id bigserial PK
+        nome varchar(100)
+        datanascimento date
+        cpf varchar(14)
+        funcionario bool
+        gerente bool
+    }
+    
+    PROJECT {
+        id bigserial PK
+        nome varchar(200)
+        data_inicio date
+        data_previsao_fim date
+        data_fim date
+        descricao varchar(5000)
+        status varchar(45)
+        orcamento float8
+        risco varchar(45)
+        idgerente int8 FK
+    }
+    
+    MEMBER {
+        idprojeto int8 PK
+        idpessoa int8 PK
+        nome varchar(200)
+        cargo varchar(200)
+    }
+
+    PERSON ||--o{ PROJECT : "idgerente"
+    PROJECT ||--|{ MEMBER : "idprojeto"
+    PERSON ||--|{ MEMBER : "idpessoa"
+```
 
