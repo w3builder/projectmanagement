@@ -31,8 +31,8 @@
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<label for="manager" class="form-label">Gerente Responsável</label> 
-									<select class="form-select form-control" id="manager" name="manager.id">
+									<label for="manager" class="form-label">Gerente Responsável *</label> 
+									<select class="form-select form-control required" id="manager" name="manager.id" required title="Por favor, selecione uma opção">
 					                  <option value="">Selecione</option>
 						              <c:forEach var="item" items="${personList}">
 						                  <option value="${item.id}" ${item.id eq project.manager.id ? 'selected' : ''}>${item.name}</option>
@@ -117,6 +117,7 @@
 	<script src="/static/libs/jquery/jquery.3.5.1.min.js"></script>
 	<script src="/static/libs/jquery/jquery.inputmask.5.0.6.min.js"></script>
 	<script src="/static/libs/bootstrap/js/bootstrap.bundle.5.3.0.min.js"></script>
+	<script src="/static/libs/jquery/popper.1.16.min.js"></script>
 	<script	src="/static/libs/bootstrap/js/bootstrap-datepicker.1.9.0.min.js"></script>
 	<script	src="/static/libs/bootstrap/js/bootstrap-datepicker.pt-BR.1.9.0.min.js"></script>
 	

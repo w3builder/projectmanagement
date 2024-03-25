@@ -24,7 +24,7 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public List<PersonDTO> findByManager(boolean manager) {
 		try {
-			List<PersonDTO> listPersons = mapper.toListDTO(repository.findAll());
+			List<PersonDTO> listPersons = mapper.toListDTO(repository.findByManager(manager));
 			if(listPersons.isEmpty()) {
 				throw new UnprocessableEntityException(Helper.LIST_ALL_NOT_FOUND);
 			}

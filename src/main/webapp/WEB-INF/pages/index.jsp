@@ -86,8 +86,8 @@
 	</body>
 
 	<script src="/static/libs/jquery/jquery.3.5.1.min.js"></script>
-	<script src="/static/libs/jquery/jquery.inputmask.5.0.6.min.js"></script>
 	<script src="/static/libs/bootstrap/js/bootstrap.bundle.5.3.0.min.js"></script>
+	<script src="/static/libs/jquery/jquery.inputmask.5.0.6.min.js"></script>
 	<script	src="/static/libs/bootstrap/js/bootstrap-datepicker.1.9.0.min.js"></script>
 	<script	src="/static/libs/bootstrap/js/bootstrap-datepicker.pt-BR.1.9.0.min.js"></script>
 	
