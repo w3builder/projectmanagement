@@ -73,9 +73,9 @@ erDiagram
         cargo varchar(200)
     }
 
-    PERSON ||--o{ PROJECT : "idgerente"
-    PROJECT ||--|{ MEMBER : "idprojeto"
-    PERSON ||--|{ MEMBER : "idpessoa"
+    PESSOA ||--o{ PROJETO : "idgerente"
+    PROJETO ||--|{ MEMBRO : "idprojeto"
+    PESSOA ||--|{ MEMBRO : "idpessoa"
 ```
 
 ## SQL das tabelas completo e corrigido
